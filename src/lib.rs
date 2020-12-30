@@ -1,16 +1,23 @@
 #![recursion_limit="256"]
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
+use web_sys::HtmlElement;
+
+mod rendering_mode;
+use rendering_mode::RenderingMode;
 
 struct Model {
     link: ComponentLink<Self>,
     value: String,
     bits: Vec<bool>,
-    input_ref: NodeRef
+    input_ref: NodeRef,
+    rendering_mode: RenderingMode,
 }
+
 
 enum Msg {
     Update(String),
+    ToggleMode,
 }
 
 impl Component for Model {
@@ -23,6 +30,7 @@ impl Component for Model {
             value: "".into(),
             bits: vec![],
             input_ref: NodeRef::default(),
+            rendering_mode: RenderingMode::Sequential,
         }
     }
 
@@ -31,6 +39,10 @@ impl Component for Model {
             Msg::Update(val) => {
                 self.value = val;
                 self.set_bits();
+            },
+
+            Msg::ToggleMode => {
+                self.rendering_mode.toggle();
             }
         }
 
@@ -42,23 +54,20 @@ impl Component for Model {
     }
 
     fn rendered(&mut self, first_render: bool) {
-
-        use web_sys::HtmlElement;
-
         if first_render {
-            if let Some(input) = self.input_ref.cast::<HtmlElement>() {
-                input.focus().expect("unable to focus");
-            }
+            self.set_focus()
         }
     }
 
     fn view(&self) -> Html {
+        let handle_mode_click = self.link.callback(|_| Msg::ToggleMode);
+
         html! {
             <div class="grid">
                 <header>
                     <h1>{ "Hamming Playground" }</h1>
                     <div class="toolbar">
-                        <button>{ "Sequential" }</button>
+                        <button onclick=handle_mode_click>{ &self.rendering_mode }</button>
                         <button>{ "Corrupt" }</button>
                         <button>{ "Repair" }</button>
                     </div>
@@ -93,6 +102,12 @@ impl Component for Model {
 }
 
 impl Model {
+    fn set_focus(&mut self) {
+        if let Some(input) = self.input_ref.cast::<HtmlElement>() {
+            input.focus().expect("unable to focus");
+        }
+    }
+
     fn set_bits(&mut self) {
         let bytes = self.value.as_bytes();
         let mut bits: Vec<bool> = Vec::new();
