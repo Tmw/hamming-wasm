@@ -133,7 +133,7 @@ impl Model {
 
         for byte in bytes {
             for bit in 0..8 {
-                bits.push(byte & 0b1 << bit > 0)
+                bits.push(byte & 0b1 << 7 - bit > 0)
             }
         }
 
@@ -146,8 +146,8 @@ impl Model {
         for chunk in bits.chunks(8) {
             let byte = chunk.iter().enumerate().fold(0_u8, |acc, (idx, b)| {
                 match b {
-                    true => acc | 0b1 << idx,
-                    false => acc | 0b0 << idx
+                    true => acc | 0b1 << 7 - idx,
+                    false => acc | 0b0 << 7 - idx
                 }
             });
 

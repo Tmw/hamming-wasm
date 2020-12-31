@@ -66,9 +66,19 @@ impl BitRenderer {
     }
 
     fn render_bit(bit: bool) -> Html {
-        match bit {
-            true =>  html!{ <div>{"1"}</div> },
-            false => html!{ <div>{"0"}</div> },
+        // TODO: We'll move the "active" vs "inactive" and wether it's a
+        // corrupted bit and wether it's a parity bit into a separate struct later.
+        // now we could derive these values.
+
+        let (class, val) = match bit {
+            true => ("bit active", "1"),
+            false => ("bit inactive", "0"),
+        };
+
+        html! {
+            <div class={class}>
+                <span>{val}</span>
+            </div>
         }
     }
 
