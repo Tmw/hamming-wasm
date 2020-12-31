@@ -4,9 +4,10 @@ use yew::prelude::*;
 use web_sys::HtmlElement;
 
 use hamming::blocks::Blocks;
-
-mod rendering_mode;
-use rendering_mode::RenderingMode;
+mod types;
+mod components;
+use components::BitRenderer;
+use types::RenderingMode;
 
 struct Model {
     link: ComponentLink<Self>,
@@ -96,11 +97,10 @@ impl Component for Model {
                     />
                 </div>
 
-                <div class="bit-container">
-                    <div class="wrapper">
-                        {for self.bits.iter().map(|bit| Model::view_bit(*bit)) }
-                    </div>
-                </div>
+                <BitRenderer
+                    bits=&self.bits
+                    rendering_mode=&self.rendering_mode
+                />
             </div>
         }
     }
@@ -155,13 +155,6 @@ impl Model {
         }
 
         bytes
-    }
-
-    fn view_bit(bit: bool) -> Html {
-        match bit {
-            true =>  html!{ <div>{"1"}</div> },
-            false => html!{ <div>{"0"}</div> },
-        }
     }
 }
 
