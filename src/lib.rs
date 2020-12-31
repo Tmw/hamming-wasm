@@ -73,7 +73,7 @@ impl Component for Model {
                 <header>
                     <h1>{ "Hamming Playground" }</h1>
                     <div class="toolbar">
-                        <button onclick=handle_mode_click>{ &self.rendering_mode }</button>
+                        <button onclick=handle_mode_click>{ &self.rendering_mode.opposite() }</button>
                         <button>{ "Corrupt" }</button>
                         <button>{ "Repair" }</button>
                     </div>
