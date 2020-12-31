@@ -3,7 +3,7 @@ use std::fmt;
 #[derive(Debug, Clone, PartialEq)]
 pub enum RenderingMode {
     Sequential,
-    Blocks
+    Blocks,
 }
 
 impl fmt::Display for RenderingMode {
@@ -12,12 +12,16 @@ impl fmt::Display for RenderingMode {
     }
 }
 
-use RenderingMode::{Sequential, Blocks};
+use RenderingMode::{Blocks, Sequential};
 impl RenderingMode {
-    pub fn toggle(&mut self){
+    pub fn toggle(&mut self) {
+        *self = self.opposite()
+    }
+
+    pub fn opposite(&self) -> Self {
         match self {
-            Sequential => *self = Blocks,
-            Blocks => *self = Sequential,
-        };
+            Sequential => Blocks,
+            Blocks => Sequential,
+        }
     }
 }

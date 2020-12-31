@@ -3,15 +3,15 @@ use yew::Properties;
 
 use crate::types::RenderingMode;
 
-pub struct BitRenderer{
+pub struct BitRenderer {
     link: ComponentLink<Self>,
     props: BitRendererProps,
 }
 
 #[derive(Properties, Clone, PartialEq)]
-pub struct BitRendererProps{
+pub struct BitRendererProps {
     pub bits: Vec<bool>,
-    pub rendering_mode: RenderingMode
+    pub rendering_mode: RenderingMode,
 }
 
 impl Component for BitRenderer {
@@ -19,10 +19,7 @@ impl Component for BitRenderer {
     type Properties = BitRendererProps;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self {
-            link,
-            props: props
-        }
+        Self { link, props: props }
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
@@ -90,6 +87,3 @@ impl BitRenderer {
         }
     }
 }
-
-
-

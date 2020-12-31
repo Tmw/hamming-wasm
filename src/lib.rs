@@ -1,11 +1,11 @@
-#![recursion_limit="256"]
+#![recursion_limit = "256"]
 use wasm_bindgen::prelude::*;
-use yew::prelude::*;
 use web_sys::HtmlElement;
+use yew::prelude::*;
 
 use hamming::blocks::Blocks;
-mod types;
 mod components;
+mod types;
 use components::BitRenderer;
 use types::RenderingMode;
 
@@ -45,7 +45,7 @@ impl Component for Model {
                 self.output_string = val.clone();
                 self.hamming_encode();
                 self.hamming_decode();
-            },
+            }
 
             Msg::ToggleMode => {
                 self.rendering_mode.toggle();
@@ -144,12 +144,13 @@ impl Model {
         let mut bytes: Bytes = Vec::new();
 
         for chunk in bits.chunks(8) {
-            let byte = chunk.iter().enumerate().fold(0_u8, |acc, (idx, b)| {
-                match b {
+            let byte = chunk
+                .iter()
+                .enumerate()
+                .fold(0_u8, |acc, (idx, b)| match b {
                     true => acc | 0b1 << 7 - idx,
-                    false => acc | 0b0 << 7 - idx
-                }
-            });
+                    false => acc | 0b0 << 7 - idx,
+                });
 
             bytes.push(byte);
         }
@@ -159,6 +160,6 @@ impl Model {
 }
 
 #[wasm_bindgen(start)]
-pub fn run_app(){
+pub fn run_app() {
     App::<Model>::new().mount_to_body();
 }
