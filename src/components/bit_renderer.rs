@@ -12,10 +12,15 @@ pub struct BitRenderer {
 pub struct BitRendererProps {
     pub bits: Vec<Bit>,
     pub rendering_mode: RenderingMode,
+    pub on_flip: Callback<usize>,
+}
+
+pub enum BitRendererMessage {
+    Flip(usize)
 }
 
 impl Component for BitRenderer {
-    type Message = ();
+    type Message = BitRendererMessage;
     type Properties = BitRendererProps;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
@@ -27,7 +32,13 @@ impl Component for BitRenderer {
         true
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            BitRendererMessage::Flip(index) => {
+                self.props.on_flip.emit(index);
+            }
+        }
+
         true
     }
 
@@ -49,7 +60,7 @@ impl BitRenderer {
     fn render_sequential(&self) -> Html {
         html! {
             <div class="wrapper sequential">
-                {for self.props.bits.iter().map(|bit| BitRenderer::render_bit(bit)) }
+                {for self.props.bits.iter().map(|bit| self.render_bit(bit)) }
             </div>
         }
     }
@@ -57,20 +68,23 @@ impl BitRenderer {
     fn render_blocks(&self) -> Html {
         html! {
             <div class="wrapper blocks">
-                {for self.props.bits.chunks(16).map(|block| BitRenderer::render_block(block)) }
+                {for self.props.bits.chunks(16).map(|block| self.render_block(block)) }
             </div>
         }
     }
 
-    fn render_block(block: &[Bit]) -> Html {
+    fn render_block(&self, block: &[Bit]) -> Html {
         html! {
             <div class="block">
-                {for block.iter().map(|bit| BitRenderer::render_bit(bit))}
+                {for block.iter().map(|bit| self.render_bit(bit))}
             </div>
         }
     }
 
-    fn render_bit(bit: &Bit) -> Html {
+    fn render_bit(&self, bit: &Bit) -> Html {
+        let bit_index = bit.index;
+        let clicked = self.link.callback(move |_| BitRendererMessage::Flip(bit_index));
+
         let (class, val) = match (bit.is_high, bit.is_parity()) {
             (true, true)   => ("bit active parity", "1"),
             (true, false)  => ("bit active", "1"),
@@ -79,7 +93,7 @@ impl BitRenderer {
         };
 
         html! {
-            <div class={class}>
+            <div class={class} onclick=&clicked>
                 <span>{val}</span>
             </div>
         }

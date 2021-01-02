@@ -21,6 +21,7 @@ struct Model {
 enum Msg {
     Update(String),
     ToggleMode,
+    FlipBit(usize),
 }
 
 impl Component for Model {
@@ -50,6 +51,13 @@ impl Component for Model {
             Msg::ToggleMode => {
                 self.rendering_mode.toggle();
             }
+
+            Msg::FlipBit(index) => {
+                if let Some(bit) = self.bits.get_mut(index) {
+                    bit.flip();
+                    self.hamming_decode();
+                }
+            }
         }
 
         true
@@ -67,6 +75,7 @@ impl Component for Model {
 
     fn view(&self) -> Html {
         let handle_mode_click = self.link.callback(|_| Msg::ToggleMode);
+        let on_flip = self.link.callback(|index| Msg::FlipBit(index));
 
         html! {
             <div class="grid">
@@ -100,6 +109,7 @@ impl Component for Model {
                 <BitRenderer
                     bits=&self.bits
                     rendering_mode=&self.rendering_mode
+                    on_flip=&on_flip
                 />
             </div>
         }
@@ -123,8 +133,7 @@ impl Model {
 
     fn hamming_decode(&mut self) {
         let bytes = Model::bits_to_bytes(&self.bits);
-        let mut blocks = Blocks::new(&bytes, true);
-        blocks.repair();
+        let blocks = Blocks::new(&bytes, true);
         self.output_string = blocks.to_string();
     }
 
@@ -132,10 +141,10 @@ impl Model {
         let mut bits: Bits = Vec::new();
         let mut index_cycler = (0..16).cycle();
 
-        for byte in bytes {
+        for (byte_idx, byte) in bytes.iter().enumerate() {
             for bit in 0..8 {
-
                 let bit = Bit {
+                    index: (byte_idx * 8) + bit,
                     is_high: byte & 0b1 << 7 - bit > 0,
                     is_flipped: false,
                     index_in_block: index_cycler.next().unwrap(),
