@@ -7,13 +7,13 @@ use hamming::blocks::Blocks;
 mod components;
 mod types;
 use components::BitRenderer;
-use types::RenderingMode;
+use types::{Bit, RenderingMode};
 
 struct Model {
     link: ComponentLink<Self>,
     input_string: String,
     output_string: String,
-    bits: Vec<bool>,
+    bits: Vec<Bit>,
     input_ref: NodeRef,
     rendering_mode: RenderingMode,
 }
@@ -107,7 +107,7 @@ impl Component for Model {
 }
 
 type Bytes = Vec<u8>;
-type Bits = Vec<bool>;
+type Bits = Vec<Bit>;
 
 impl Model {
     fn set_focus(&mut self) {
@@ -130,10 +130,18 @@ impl Model {
 
     fn bytes_to_bits(bytes: &Bytes) -> Bits {
         let mut bits: Bits = Vec::new();
+        let mut index_cycler = (0..16).cycle();
 
         for byte in bytes {
             for bit in 0..8 {
-                bits.push(byte & 0b1 << 7 - bit > 0)
+
+                let bit = Bit {
+                    is_high: byte & 0b1 << 7 - bit > 0,
+                    is_flipped: false,
+                    index_in_block: index_cycler.next().unwrap(),
+                };
+
+                bits.push(bit)
             }
         }
 
@@ -147,7 +155,7 @@ impl Model {
             let byte = chunk
                 .iter()
                 .enumerate()
-                .fold(0_u8, |acc, (idx, b)| match b {
+                .fold(0_u8, |acc, (idx, bit)| match bit.is_high {
                     true => acc | 0b1 << 7 - idx,
                     false => acc | 0b0 << 7 - idx,
                 });

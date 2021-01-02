@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use yew::Properties;
 
-use crate::types::RenderingMode;
+use crate::types::{Bit, RenderingMode};
 
 pub struct BitRenderer {
     link: ComponentLink<Self>,
@@ -10,7 +10,7 @@ pub struct BitRenderer {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct BitRendererProps {
-    pub bits: Vec<bool>,
+    pub bits: Vec<Bit>,
     pub rendering_mode: RenderingMode,
 }
 
@@ -49,7 +49,7 @@ impl BitRenderer {
     fn render_sequential(&self) -> Html {
         html! {
             <div class="wrapper sequential">
-                {for self.props.bits.iter().map(|bit| BitRenderer::render_bit(*bit)) }
+                {for self.props.bits.iter().map(|bit| BitRenderer::render_bit(bit)) }
             </div>
         }
     }
@@ -62,27 +62,25 @@ impl BitRenderer {
         }
     }
 
-    fn render_bit(bit: bool) -> Html {
-        // TODO: We'll move the "active" vs "inactive" and wether it's a
-        // corrupted bit and wether it's a parity bit into a separate struct later.
-        // now we could derive these values.
+    fn render_block(block: &[Bit]) -> Html {
+        html! {
+            <div class="block">
+                {for block.iter().map(|bit| BitRenderer::render_bit(bit))}
+            </div>
+        }
+    }
 
-        let (class, val) = match bit {
-            true => ("bit active", "1"),
-            false => ("bit inactive", "0"),
+    fn render_bit(bit: &Bit) -> Html {
+        let (class, val) = match (bit.is_high, bit.is_parity()) {
+            (true, true)   => ("bit active parity", "1"),
+            (true, false)  => ("bit active", "1"),
+            (false, true)  => ("bit inactive parity", "0"),
+            (false, false) => ("bit inactive", "0"),
         };
 
         html! {
             <div class={class}>
                 <span>{val}</span>
-            </div>
-        }
-    }
-
-    fn render_block(block: &[bool]) -> Html {
-        html! {
-            <div class="block">
-                {for block.iter().map(|bit| BitRenderer::render_bit(*bit))}
             </div>
         }
     }
