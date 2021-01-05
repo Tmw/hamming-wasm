@@ -22,6 +22,9 @@ enum Msg {
     Update(String),
     ToggleMode,
     FlipBit(usize),
+    FlipRandom,
+    Repair,
+    Reset,
 }
 
 impl Component for Model {
@@ -58,6 +61,18 @@ impl Component for Model {
                     self.hamming_decode();
                 }
             }
+
+            Msg::FlipRandom => {
+                self.corrupt();
+            }
+
+            Msg::Repair => {
+                self.repair();
+            }
+
+            Msg::Reset => {
+                self.reset();
+            }
         }
 
         true
@@ -75,6 +90,9 @@ impl Component for Model {
 
     fn view(&self) -> Html {
         let handle_mode_click = self.link.callback(|_| Msg::ToggleMode);
+        let handle_corrupt_click = self.link.callback(|_| Msg::FlipRandom);
+        let handle_repair_click = self.link.callback(|_| Msg::Repair);
+        let handle_reset_click = self.link.callback(|_| Msg::Reset);
         let on_flip = self.link.callback(|index| Msg::FlipBit(index));
 
         html! {
@@ -83,8 +101,9 @@ impl Component for Model {
                     <h1>{ "Hamming Playground" }</h1>
                     <div class="toolbar">
                         <button onclick=handle_mode_click>{ &self.rendering_mode.opposite() }</button>
-                        <button>{ "Corrupt" }</button>
-                        <button>{ "Repair" }</button>
+                        <button onclick=handle_corrupt_click>{ "Corrupt" }</button>
+                        <button onclick=handle_repair_click>{ "Repair" }</button>
+                        <button onclick=handle_reset_click>{ "Reset" }</button>
                     </div>
                 </header>
 
@@ -119,6 +138,8 @@ impl Component for Model {
 type Bytes = Vec<u8>;
 type Bits = Vec<Bit>;
 
+use yew::services::ConsoleService;
+
 impl Model {
     fn set_focus(&mut self) {
         if let Some(input) = self.input_ref.cast::<HtmlElement>() {
@@ -126,8 +147,29 @@ impl Model {
         }
     }
 
+    fn corrupt(&mut self) {
+        ConsoleService::info("FlipRandom");
+    }
+
+    fn repair(&mut self) {
+        let bytes = Model::bits_to_bytes(&self.bits);
+        let mut blocks = Blocks::new(&bytes, true);
+        blocks.repair();
+
+
+        self.bits = Model::bytes_to_bits(&blocks.to_byte_vec());
+        self.hamming_decode();
+    }
+
+    fn reset(&mut self) {
+        self.hamming_encode();
+        self.hamming_decode();
+    }
+
     fn hamming_encode(&mut self) {
-        let blocks = Blocks::new(&self.input_string.as_bytes(), false);
+        let mut blocks = Blocks::new(&self.input_string.as_bytes(), false);
+        blocks.prepare();
+
         self.bits = Model::bytes_to_bits(&blocks.to_byte_vec());
     }
 
