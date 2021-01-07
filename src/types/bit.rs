@@ -12,8 +12,7 @@ impl Bit {
     }
 
     pub fn flip(&mut self) {
-       self.is_flipped = !self.is_flipped;
-       self.is_high = !self.is_high;
+        self.is_flipped = !self.is_flipped;
+        self.is_high = !self.is_high;
     }
 }
-

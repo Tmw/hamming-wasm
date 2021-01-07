@@ -16,7 +16,7 @@ pub struct BitRendererProps {
 }
 
 pub enum BitRendererMessage {
-    Flip(usize)
+    Flip(usize),
 }
 
 impl Component for BitRenderer {
@@ -83,15 +83,17 @@ impl BitRenderer {
 
     fn render_bit(&self, bit: &Bit) -> Html {
         let bit_index = bit.index;
-        let clicked = self.link.callback(move |_| BitRendererMessage::Flip(bit_index));
+        let clicked = self
+            .link
+            .callback(move |_| BitRendererMessage::Flip(bit_index));
 
         let (class, val) = match (bit.is_high, bit.is_parity(), bit.is_flipped) {
             (true, _, true) => ("bit flipped", "1"),
-            (false , _, true) => ("bit flipped", "0"),
+            (false, _, true) => ("bit flipped", "0"),
 
-            (true, true, false)   => ("bit active parity", "1"),
-            (true, false, false)  => ("bit active", "1"),
-            (false, true, false)  => ("bit inactive parity", "0"),
+            (true, true, false) => ("bit active parity", "1"),
+            (true, false, false) => ("bit active", "1"),
+            (false, true, false) => ("bit inactive parity", "0"),
             (false, false, false) => ("bit inactive", "0"),
         };
 

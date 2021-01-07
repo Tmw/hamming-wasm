@@ -1,5 +1,5 @@
-mod rendering_mode;
 mod bit;
+mod rendering_mode;
 
-pub use rendering_mode::RenderingMode;
 pub use bit::Bit;
+pub use rendering_mode::RenderingMode;
