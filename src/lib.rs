@@ -5,6 +5,7 @@ use yew::prelude::App;
 mod app;
 mod components;
 mod types;
+mod config;
 
 #[wasm_bindgen(start)]
 pub fn run_app() {

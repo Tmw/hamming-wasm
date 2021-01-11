@@ -121,6 +121,10 @@ impl Component for App {
                     />
                 </div>
 
+                <div class="footer">
+                    {self.render_footer_links()}
+                </div>
+
                 <BitRenderer
                     bits=&self.bits
                     rendering_mode=&self.rendering_mode
@@ -220,5 +224,18 @@ impl App {
         }
 
         bytes
+    }
+
+    fn render_footer_links(&self) -> Html {
+        let help_url = crate::config::help_url();
+        let repo_url = crate::config::repo_url();
+
+        html! {
+            <>
+                <a href={help_url}>{"Help"}</a>
+                <a href={repo_url}>{"Source"}</a>
+            </>
+        }
+
     }
 }

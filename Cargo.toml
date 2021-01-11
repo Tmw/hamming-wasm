@@ -2,6 +2,7 @@
 name = "hamming-wasm"
 version = "0.1.0"
 authors = ["Tiemen Waterreus <tiemen@tiemenwaterreus.com>"]
+repository = "https://github.com/tmw/hamming-wasm"
 edition = "2018"
 
 [lib]
