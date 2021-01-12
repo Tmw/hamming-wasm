@@ -24,6 +24,15 @@ jobs:
 
       - name: Build
         run: make build
+      - name: Prepare for deploy
+        run: mkdir dist
+        run: cp static/index.html dist/index.html
+        run: cp static/style.css dist/style.css
+        run: cp static/wasm.js dist/wasm.js
+        run: cp static/wasm_bg.js dist/wasm_bg.js
 
-      - name: see all
-        run: ls -la static
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
