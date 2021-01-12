@@ -1,0 +1,177 @@
+:root {
+  --background-color: #EBEDEF;
+  --offset-background-color: #ABB2B9;
+  --header-background-color: #808B96;
+  --active-bit-background-color: #E1E1E1;
+  --inactive-bit-background-color: #FAFAFA;
+
+  --active-parity-bit-background-color: #BFD6EA;
+  --inactive-parity-bit-background-color: #E5EFF6;
+
+  --flipped-bit-background-color: #F8B6B3;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.grid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 60px 1fr 1fr;
+  column-gap: 10px;
+}
+
+header {
+  background-color: var(--header-background-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px 10px 30px;
+  align-items: center;
+}
+
+header h1 {
+  font-family: arial;
+  color: var(--background-color);
+  font-size: 14pt;
+  padding: 0;
+  margin: 0;
+}
+
+.toolbar {
+  min-width: 250px;
+  display: flex;
+}
+
+.toolbar button {
+  background-color: #fff;
+  border: none;
+  outline: none;
+  padding: 10px 30px;
+  margin: 0px 5px;
+  border-radius: 5px;
+  border-color: #EBEDEF;
+}
+
+.toolbar button:hover {
+  background-color: #EBEDEF;
+}
+
+.toolbar button:active {
+  background-color: #ABB2B9;
+}
+
+
+.toolbar label {
+  color: white;
+}
+
+.footer {
+  background-color: var(--background-color);
+  padding: 30px;
+  font-family: arial;
+  color: var(--offset-background-color);
+  text-align: right;
+}
+
+.footer a {
+  padding-right: 10px;
+  color: var(--offset-background-color);
+}
+
+.input-box {
+  background-color: var(--background-color);
+  padding: 30px;
+}
+
+.input-box:first-of-type {
+  border-bottom: 1px solid var(--offset-background-color);
+}
+
+.input-box > h2 {
+  font-family: arial;
+  color: var(--offset-background-color);
+  text-align: left;
+  font-size: 10pt;
+  text-transform: uppercase;
+  width: 100px;
+  padding: 5px;
+}
+
+.input-box > textarea {
+  border: none;
+  resize: none;
+  width: calc(100% - 20px);
+  height: calc(100% - 70px);
+  background-color: var(--background-color);
+  outline: none;
+  font-size: 20pt;
+}
+
+.bit-container {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  grid-row-end: 4;
+
+  overflow-y: scroll;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-flow: row wrap;
+}
+
+.wrapper.sequential {
+  padding-top: 10px;
+}
+
+.wrapper.blocks {
+  padding-top: 5px;
+}
+
+.block {
+  width: 196px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 5px 5px 0px;
+}
+
+.bit {
+  font-size: 18pt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  margin: 0px 2px 2px 0px;
+  cursor: pointer;
+}
+
+.bit span {
+  user-select: none;
+}
+
+.bit.active {
+  background-color: var(--active-bit-background-color);
+}
+.bit.active.parity {
+  background-color: var(--active-parity-bit-background-color);
+}
+
+.bit.inactive {
+  background-color: var(--inactive-bit-background-color);
+}
+
+.bit.inactive.parity {
+  background-color: var(--inactive-parity-bit-background-color);
+}
+
+.bit.flipped {
+  background-color: var(--flipped-bit-background-color);
+}
+
