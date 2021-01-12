@@ -4,8 +4,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: Building artefacts
+  check:
+    name: check and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,5 +19,11 @@ jobs:
       - name: Run check
         run: cargo check
 
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
 
+      - name: Build
+        run: make build
 
+      - name: see all
+        run: ls -la static
