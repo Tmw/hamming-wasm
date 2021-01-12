@@ -2,6 +2,9 @@
 
 A Hamming Coding playground built in WebAssembly using Rust and [Yew](https://yew.rs/docs/en/).
 
+## Demo
+Play with the demo over at [https://tmw.github.io/hamming-wasm/](https://tmw.github.io/hamming-wasm/)
+
 ## Help
 
 Text typed in the top left textarea will be converted and displayed in bits using Hamming Coding. These bits are then decoded and shown as text again in the bottom left area. Introducing noise (corrupting) bits in the right view, will impact the text being outputted on the bottom left. Clicking any of the bits will toggle the bit's value and _likely_ corrupting the output text.
