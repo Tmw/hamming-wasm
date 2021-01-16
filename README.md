@@ -21,13 +21,16 @@ By clicking the `Corrupt` button we're randomly corrupting (flipping) at most on
 
 The `Repair` button will invoke the repair mechanism that will repair the blocks to their original state following the parity bits of that block.
 
-**Repair**
+**Reset**
 
 Hitting `Reset` will take the original input string and encode it again. It'll truly act as a reset in case the string got too corrupted :)
 
 **Sequential / Blocks**
 
 The `Sequential` button will toggle between `Blocks` mode (default rendering) and sequential. I've added a `Blocks` mode to make it easier to distinguish the various blocks, and later on decided that should be the default. The `Sequential` just renders all the bits in a long string, as they would also appear in a file or over the wire.
+
+**Meaning of the blocks**
+The light gray blocks indicate a 0 and the dark gray blocks indicate a 1. The blue tinted blocks indicate the position of the parity bits and also there light blue means 0 and dark blue means 1.
 
 ## License
 [MIT](LICENSE)
