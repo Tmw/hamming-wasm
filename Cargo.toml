@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["Tiemen Waterreus <tiemen@tiemenwaterreus.com>"]
 repository = "https://github.com/tmw/hamming-wasm"
 edition = "2018"
+description = "Hamming Coding playground built in Rust using Yew and wasm-pack"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
